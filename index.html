@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="FoodCash Cincinnati restaurant discovery and referral platform.">
+<title>FoodCash Cincinnati</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="public/config.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="./">🍔 FoodCash</a>
+  <span class="tag">Cincinnati, Ohio</span>
+  <button id="login-open" class="outline">Admin sign in</button>
+</header>
+<main>
+  <section class="hero">
+    <p class="eyebrow">DISCOVER LOCAL FOOD</p>
+    <h1>Good food. Local restaurants.</h1>
+    <p>Explore participating Cincinnati restaurants through FoodCash referral links.</p>
+    <p class="notice">FoodCash may earn a commission from qualifying orders made through participating restaurant links. Orders and fulfillment are handled by each restaurant.</p>
+  </section>
+
+  <section>
+    <div class="section-head"><h2>Participating restaurants</h2><button id="refresh" class="outline">Refresh</button></div>
+    <div id="restaurants" class="cards"><p class="muted">Loading restaurants…</p></div>
+  </section>
+
+  <section id="auth-panel" class="panel hidden">
+    <div class="section-head"><h2>Administrator access</h2><button id="login-close" class="outline">Close</button></div>
+    <p class="muted">Sign in with an account created in your Supabase project.</p>
+    <form id="login-form" class="form">
+      <label>Email<input id="email" type="email" autocomplete="username" required></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+      <button type="submit">Sign in</button>
+      <p id="login-message" class="muted" role="status"></p>
+    </form>
+  </section>
+
+  <section id="admin" class="panel hidden">
+    <div class="section-head"><h2>FoodCash admin</h2><button id="logout" class="outline">Sign out</button></div>
+    <p id="admin-status" class="muted">Loading admin tools…</p>
+    <div class="admin-grid">
+      <form id="restaurant-form" class="form">
+        <h3>Add restaurant prospect / partner</h3>
+        <label>Restaurant name<input id="r-name" required maxlength="120"></label>
+        <label>City<input id="r-city" value="Cincinnati, OH" required></label>
+        <label>Ordering URL<input id="r-url" type="url" placeholder="https://restaurant.example/order" required></label>
+        <label>Referral code<input id="r-code" required maxlength="32" pattern="[A-Za-z0-9_-]+"></label>
+        <label>Agreed commission percentage<input id="r-rate" type="number" min="0" max="100" step="0.1" value="10" required></label>
+        <label class="check"><input id="r-active" type="checkbox"> Active partner (only after signed agreement)</label>
+        <button type="submit">Save restaurant</button>
+        <p id="restaurant-message" class="muted" role="status"></p>
+      </form>
+      <form id="order-form" class="form">
+        <h3>Record a restaurant-confirmed order</h3>
+        <label>Restaurant<select id="o-restaurant" required></select></label>
+        <label>Restaurant order reference<input id="o-ref" required maxlength="100"></label>
+        <label>Eligible food subtotal ($)<input id="o-subtotal" type="number" min="0.01" step="0.01" required></label>
+        <label>Commission percentage<input id="o-rate" type="number" min="0" max="100" step="0.1" required></label>
+        <label>Verification status<select id="o-status"><option value="pending">Pending verification</option><option value="approved">Approved after restaurant verification</option></select></label>
+        <button type="submit">Record order</button>
+        <p id="order-message" class="muted" role="status"></p>
+      </form>
+    </div>
+    <div class="section-head"><h3>Order ledger</h3><button id="load-orders" class="outline">Reload</button></div>
+    <div id="orders" class="table-wrap"><p class="muted">Sign in as an administrator to view the ledger.</p></div>
+    <form id="payout-form" class="form payout-form">
+      <h3>Record a completed payout</h3>
+      <p class="notice">Only record a payout after restaurant funds have been received and you have actually sent the payment. This form does not send money.</p>
+      <label>Order ID<select id="p-order" required></select></label>
+      <label>Amount paid ($)<input id="p-amount" type="number" min="0.01" step="0.01" required></label>
+      <label>Payment reference<input id="p-ref" required maxlength="120" placeholder="Cash App transaction reference"></label>
+      <button type="submit">Save payout record</button>
+      <p id="payout-message" class="muted" role="status"></p>
+    </form>
+  </section>
+</main>
+<footer>FoodCash Cincinnati · Independent restaurant referral concept · Orders fulfilled by restaurants</footer>
+</body>
+</html>
